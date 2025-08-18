@@ -1,0 +1,52 @@
+services:
+  ros-dev:
+    # Image and build are parameterized by ROS_DISTRO (default: humble)
+    image: adyansh04/ros-dev:${ROS_DISTRO:-humble}-latest
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+      args:
+        BASE_IMAGE: adyansh04/ros-dev:${ROS_DISTRO:-humble}-latest
+
+    # Keep the container running and attachable
+    tty: true
+    stdin_open: true
+
+    # Container name includes the ROS distro for clarity
+    container_name: ros_dev_${ROS_DISTRO:-humble}
+
+    # Persistent host mounts using long (object) syntax
+    volumes:
+      - type: bind
+        source: ./data
+        target: /data
+      - type: bind
+        source: ./workspaces
+        target: /root/workspaces
+        read_only: false
+      - type: bind
+        source: /dev
+        target: /dev
+      - type: bind
+        source: /tmp/.X11-unix
+        target: /tmp/.X11-unix
+        read_only: false
+      - type: bind
+        source: ~/.ssh
+        target: /root/.ssh
+        read_only: true
+
+    # Hardware, networking, and IPC settings suitable for dev workflows
+    privileged: true
+    network_mode: "host"
+    ipc: host
+    pid: host
+
+    # GPU support with Compose (requires NVIDIA Container Toolkit on host)
+    gpus: all
+    runtime: nvidia
+
+    # GUI environment
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1

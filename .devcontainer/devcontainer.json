@@ -1,0 +1,58 @@
+// .devcontainer/devcontainer.json
+{
+	"name": "ROS 2 Development Environment",
+	"dockerComposeFile": [
+		"../docker-compose.yml"
+	],
+	"service": "ros-dev",
+	"workspaceFolder": "/root/workspaces/ros2_ws",
+	"remoteUser": "root",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				// C/C++ Language Support (Clangd)
+				"llvm-vs-code-extensions.vscode-clangd",
+				// Python Language Support (Ruff)
+				"ms-python.python",
+				"charliermarsh.ruff",
+				// ROS 2 Development Pack and Tools
+				"Ranch-Hand-Robotics.rde-pack",
+				"althack.ament-task-provider",
+				"AlessandroSofia.ros2-topic-viewer",
+				"KodoRobotics.launchmap",
+				// AI Code Assistance
+				"GitHub.copilot",
+				"GitHub.copilot-chat",
+				// Other useful tools
+				"twxs.cmake",
+				"ms-vscode.cmake-tools",
+				"cheshirekow.cmake-format"
+			],
+			"settings": {
+				// --- General Settings ---
+				"terminal.integrated.defaultProfile.linux": "bash",
+				"python.defaultInterpreterPath": "/usr/bin/python3",
+				"editor.formatOnSave": false,
+
+				// --- Clangd Configuration ---
+				"C_Cpp.intelliSenseEngine": "disabled",
+				"clangd.arguments": [
+					"--compile-commands-dir=${workspaceFolder}/build"
+				],
+				"[cpp]": {
+					"editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+				},
+
+				// --- Ruff Configuration ---
+				"[python]": {
+					"editor.defaultFormatter": "charliermarsh.ruff",
+					"editor.codeActionsOnSave": {
+						"source.organizeImports": "explicit"
+					}
+				}
+			}
+		}
+	},
+	// Build once to generate compile_commands.json for clangd. Uses ROS_DISTRO from image env.
+  "postCreateCommand": "source /opt/ros/$ROS_DISTRO/setup.bash && colcon build --symlink-install --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+}

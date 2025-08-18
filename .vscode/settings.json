@@ -1,0 +1,31 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/opt/ros/humble/lib/python3.10/site-packages/",
+        "/root/ros2_ws/install/lib/python3.10/site-packages/"
+    ],
+    "python.analysis.extraPaths": [
+        "/opt/ros/humble/lib/python3.10/site-packages/",
+        "/root/ros2_ws/install/lib/python3.10/site-packages/"
+    ],
+    "cmake.configureOnOpen": true,
+    "files.associations": {
+        "*.repos": "yaml",
+        "*.world": "xml",
+        "*.xacro": "xml"
+    },
+    // --- General Settings ---
+    "terminal.integrated.defaultProfile.linux": "bash",
+    "python.defaultInterpreterPath": "/usr/bin/python3",
+    "editor.formatOnSave": false,
+    "editor.rulers": [120],
+    // --- Clangd Configuration ---
+    "C_Cpp.intelliSenseEngine": "disabled",
+    "clangd.arguments": [
+        "--compile-commands-dir=${workspaceFolder}/build",
+        "--clang-tidy",
+        "--fallback-style=file"
+    ],
+    "[cpp]": {
+        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+    }
+}

@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "ROS: Launch",
+            "type": "ros",
+            "request": "launch",
+            "target": "${workspaceFolder}/src/my_package/launch/my_launch.py",
+            "launch": [
+                "rviz2"
+            ],
+            "preLaunchTask": "colcon build (R)"
+        },
+        {
+            "name": "ROS: Attach",
+            "type": "ros",
+            "request": "attach"
+        }
+    ]
+}
