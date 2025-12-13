@@ -5,7 +5,7 @@
 		"../docker-compose.yml"
 	],
 	"service": "ros-dev",
-	"workspaceFolder": "/root/workspaces/ros2_ws",
+	"workspaceFolder": "/root/workspace",
 	"remoteUser": "root",
 	"customizations": {
 		"vscode": {
@@ -54,5 +54,5 @@
 		}
 	},
 	// Build once to generate compile_commands.json for clangd. Uses ROS_DISTRO from image env.
-  "postCreateCommand": "source /opt/ros/$ROS_DISTRO/setup.bash && colcon build --symlink-install --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+	"postCreateCommand": "source /opt/ros/${ROS_DISTRO:-jazzy}/setup.bash && cd /root/workspace && colcon build --symlink-install --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON || true"
 }

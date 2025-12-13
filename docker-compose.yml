@@ -1,29 +1,29 @@
 services:
   ros-dev:
-    # Image and build are parameterized by ROS_DISTRO (default: humble)
-    image: adyansh04/ros-dev:${ROS_DISTRO:-humble}-latest
+    # Image parameterized by ROS_DISTRO (default: jazzy)
+    image: adyansh04/ros-dev:${ROS_DISTRO:-jazzy}
     build:
       context: .
       dockerfile: .devcontainer/Dockerfile
       args:
-        BASE_IMAGE: adyansh04/ros-dev:${ROS_DISTRO:-humble}-latest
+        BASE_IMAGE: adyansh04/ros-dev:${ROS_DISTRO:-jazzy}
 
     # Keep the container running and attachable
     tty: true
     stdin_open: true
 
     # Container name includes the ROS distro for clarity
-    container_name: ros_dev_${ROS_DISTRO:-humble}
+    container_name: ros_dev_${ROS_DISTRO:-jazzy}
 
     # Persistent host mounts using long (object) syntax
     volumes:
       - type: bind
-        source: ./data
-        target: /data
-      - type: bind
-        source: ./workspaces
-        target: /root/workspaces
+        source: ./workspace
+        target: /root/workspace
         read_only: false
+      - type: bind
+        source: ./data
+        target: /root/data
       - type: bind
         source: /dev
         target: /dev
@@ -43,10 +43,16 @@ services:
     pid: host
 
     # GPU support with Compose (requires NVIDIA Container Toolkit on host)
-    gpus: all
-    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
 
     # GUI environment
     environment:
       - DISPLAY=${DISPLAY}
       - QT_X11_NO_MITSHM=1
+      - ROS_DISTRO=${ROS_DISTRO:-jazzy}

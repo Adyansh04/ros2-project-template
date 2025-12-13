@@ -2,13 +2,13 @@
 #
 # Unified script for managing the ROS development Docker container lifecycle.
 #
-# Usage: ROS_DISTRO=humble ./manage.sh [start|stop|restart|recreate|logs|exec]
+# Usage: ROS_DISTRO=jazzy ./scripts/manage.sh [start|stop|restart|recreate|logs|exec]
 #
 
 set -e
 
-# --- Configuration (parameterized by ROS_DISTRO; defaults to 'humble') ---
-ROS_DISTRO="${ROS_DISTRO:-humble}"
+# --- Configuration (parameterized by ROS_DISTRO; defaults to 'jazzy') ---
+ROS_DISTRO="${ROS_DISTRO:-jazzy}"
 export ROS_DISTRO
 CONTAINER_NAME="ros_dev_${ROS_DISTRO}"
 
@@ -23,10 +23,10 @@ function print_usage() {
     echo "  exec      - Attach a bash shell to the running container."
 }
 
-# Ensure .vscode exists inside host workspaces so files are visible inside the container.
-function ensure_vscode_in_workspaces() {
+# Ensure .vscode exists inside host workspace so files are visible inside the container.
+function ensure_vscode_in_workspace() {
     local repo_root
-    repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
     local src_vscode="${repo_root}/.vscode"
 
     if [ ! -d "${src_vscode}" ]; then
@@ -34,17 +34,14 @@ function ensure_vscode_in_workspaces() {
         return 0
     fi
 
-    local targets=("workspaces/ros2_ws/src" "workspaces/colcon_ws/src")
-    for t in "${targets[@]}"; do
-        local dest="${repo_root}/${t}/.vscode"
-        if [ -d "${dest}" ]; then
-            echo ".vscode already present at ${dest}; skipping."
-        else
-            echo "Creating ${repo_root}/${t} and copying .vscode -> ${dest}"
-            mkdir -p "${repo_root}/${t}"
-            cp -r "${src_vscode}" "${dest}"
-        fi
-    done
+    local dest="${repo_root}/workspace/src/.vscode"
+    if [ -d "${dest}" ]; then
+        echo ".vscode already present at ${dest}; skipping."
+    else
+        echo "Creating ${repo_root}/workspace/src and copying .vscode -> ${dest}"
+        mkdir -p "${repo_root}/workspace/src"
+        cp -r "${src_vscode}" "${dest}"
+    fi
 }
 
 # --- Main Logic ---
@@ -54,11 +51,11 @@ case "$ACTION" in
     start)
     echo "Starting ROS development container for ROS_DISTRO='${ROS_DISTRO}'..."
     echo "Preparing workspace and copying default .vscode if missing..."
-    ensure_vscode_in_workspaces
+    ensure_vscode_in_workspace
     echo "Granting GUI access (X11)..."
-    xhost +local:docker
+    xhost +local:docker 2>/dev/null || true
     docker compose up -d --build
-    echo "Container '${CONTAINER_NAME}' started. Use './manage.sh exec' to open a shell."
+    echo "Container '${CONTAINER_NAME}' started. Use './scripts/manage.sh exec' to open a shell."
         ;;
     stop)
         echo "Stopping container..."
@@ -71,9 +68,9 @@ case "$ACTION" in
         echo "Restarted."
         ;;
     recreate)
-    echo "Recreating container (code and data on host are preserved: ./workspaces, ./data)..."
+    echo "Recreating container (code and data on host are preserved: ./workspace, ./data)..."
     echo "Preparing workspace and copying default .vscode if missing..."
-    ensure_vscode_in_workspaces
+    ensure_vscode_in_workspace
     docker compose down
     docker compose up -d --build
     echo "Recreated."
