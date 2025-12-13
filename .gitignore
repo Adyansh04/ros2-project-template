@@ -7,6 +7,9 @@ workspace/log/
 !workspace/src/
 !workspace/src/.gitkeep
 
+# Environment files (keep .env.example)
+.env
+
 # Python
 __pycache__/
 *.py[cod]

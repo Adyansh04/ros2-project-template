@@ -8,6 +8,7 @@ This repository provides a lightweight, reproducible containerized ROS 2 develop
 - **Pre-configured tooling**: Clangd for C++ IntelliSense and Ruff for Python linting/formatting.
 - **GPU support**: NVIDIA Container Toolkit integration for GPU-accelerated workloads.
 - **Parameterized ROS distro**: Easily switch between Humble, Jazzy, or other ROS 2 distributions.
+- **Customizable Dockerfile**: Add project-specific dependencies easily.
 
 ## Prerequisites
 
@@ -22,6 +23,9 @@ This repository provides a lightweight, reproducible containerized ROS 2 develop
 ```bash
 git clone <your-template-repo-url>
 cd ros2_project_template
+
+# If the repo contains submodules, initialize them:
+git submodule update --init --recursive
 ```
 
 ### 2. Start the Container (Compose-first)
@@ -34,11 +38,13 @@ This starts the development container in detached mode using the default ROS dis
 
 ### 3. Attach to the Container
 
-**Option A: VS Code (Recommended)**
+**Option A: VS Code (Recommended for development)**
 
 1. Open the repository folder in VS Code.
 2. Click **"Reopen in Container"** when prompted (or use Command Palette: `Dev Containers: Reopen in Container`).
-3. VS Code will attach to the running `ros-dev` service.
+3. VS Code will attach to the running `ros-dev` service with all extensions pre-configured.
+
+> **Note**: The `.devcontainer/` configuration is optional. It enhances VS Code integration by auto-installing extensions and settings, but the container works independently of VS Code via `docker compose`.
 
 **Option B: Terminal**
 
@@ -60,11 +66,14 @@ ros2-project-template/
 │   └── src/             # Place your packages and git submodules here
 ├── data/                # Shared data folder for host-container file sharing
 ├── scripts/             # Helper scripts (manage.sh)
-├── .devcontainer/       # VS Code Dev Container configuration
+├── .devcontainer/       # VS Code Dev Container configuration (optional)
+│   └── Dockerfile       # Customize this for project-specific dependencies
 ├── .vscode/             # VS Code settings (clangd, ruff, tasks)
 ├── .clang-format        # C++ formatting rules
 ├── .clangd              # Clangd configuration
 ├── ruff.toml            # Python linting/formatting rules
+├── .env.example         # Environment variable template
+├── .gitmodules.example  # Git submodules example
 └── docker-compose.yml   # Docker Compose orchestration
 ```
 
@@ -78,6 +87,42 @@ ros2-project-template/
 | `/dev`          | `/dev`             | Hardware device access          |
 | `~/.ssh`        | `/root/.ssh`       | SSH keys (read-only)            |
 
+## Customizing the Dockerfile
+
+The `.devcontainer/Dockerfile` is designed for easy customization. Add your project-specific dependencies in the marked section:
+
+```dockerfile
+# ============================================================================
+# PROJECT-SPECIFIC CUSTOMIZATION
+# Add your project dependencies below. Examples:
+# ============================================================================
+
+# Install additional ROS packages (uses ROS_DISTRO from base image):
+RUN apt-get update && apt-get install -y \
+    ros-jazzy-navigation2 \
+    ros-jazzy-slam-toolbox \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python packages:
+RUN pip install --no-cache-dir numpy scipy opencv-python
+
+# Install system dependencies:
+RUN apt-get update && apt-get install -y \
+    libopencv-dev \
+    libeigen3-dev \
+    && rm -rf /var/lib/apt/lists/*
+```
+
+> **Note**: Replace `jazzy` with your target ROS distro (e.g., `humble`) as needed.
+
+After modifying the Dockerfile, rebuild the image:
+
+```bash
+docker compose down
+docker compose up -d --build
+# Or: ./scripts/manage.sh recreate
+```
+
 ## Switching ROS Distributions
 
 The default ROS distro is **Jazzy**. To use a different distribution (e.g., Humble):
@@ -89,6 +134,11 @@ docker compose up -d
 
 # Or inline:
 ROS_DISTRO=humble docker compose up -d
+
+# Or copy and edit .env.example:
+cp .env.example .env
+# Edit .env to set ROS_DISTRO=humble
+docker compose up -d
 ```
 
 The container will be named `ros_dev_<distro>` (e.g., `ros_dev_humble`).
@@ -107,6 +157,8 @@ git submodule add https://github.com/example/my_robot_description.git workspace/
 # Initialize and update submodules (for fresh clones)
 git submodule update --init --recursive
 ```
+
+See `.gitmodules.example` for example configurations.
 
 ## Building the Workspace
 
@@ -186,7 +238,22 @@ ROS_DISTRO=humble ./scripts/manage.sh start
 
 ### VS Code Extensions
 
-Recommended extensions are defined in `.vscode/extensions.json` and will be automatically installed when using the Dev Container.
+Recommended extensions are defined in `.vscode/extensions.json` and `.devcontainer/devcontainer.json`, and are automatically installed when using the Dev Container.
+
+## About the Dev Container (Optional)
+
+The `.devcontainer/` folder provides VS Code-specific integration:
+
+- **Auto-installs extensions**: Clangd, Ruff, ROS tools, CMake, etc.
+- **Pre-configures settings**: Editor settings, formatters, IntelliSense.
+- **Runs postCreateCommand**: Builds workspace on first open to generate `compile_commands.json`.
+
+**You don't need the Dev Container if:**
+- You're not using VS Code
+- You prefer to manage extensions manually
+- You're using the container via `docker exec` or another IDE
+
+The container works fully independently via `docker compose up -d`.
 
 ## GPU and GUI Notes
 
