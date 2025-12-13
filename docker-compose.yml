@@ -24,7 +24,7 @@ services:
       - type: bind
         source: ./.vscode
         target: /root/workspace/.vscode
-        read_only: false
+        read_only: true
       - type: bind
         source: ./.clangd
         target: /root/workspace/.clangd
