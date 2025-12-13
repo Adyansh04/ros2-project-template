@@ -82,6 +82,10 @@ ros2-project-template/
 | Host Path       | Container Path     | Description                     |
 |-----------------|--------------------|---------------------------------|
 | `./workspace`   | `/root/workspace`  | ROS 2 workspace (bind mount)    |
+| `./.vscode`     | `/root/workspace/.vscode` | VS Code workspace settings/tasks |
+| `./.clangd`     | `/root/workspace/.clangd` | Clangd configuration for C++   |
+| `./.clang-format` | `/root/workspace/.clang-format` | C++ formatting rules    |
+| `./ruff.toml`   | `/root/workspace/ruff.toml` | Python linting/formatting rules |
 | `./data`        | `/root/data`       | Shared data folder              |
 | `/tmp/.X11-unix`| `/tmp/.X11-unix`   | X11 socket for GUI apps         |
 | `/dev`          | `/dev`             | Hardware device access          |
@@ -295,4 +299,3 @@ docker compose up -d --build
 ---
 
 **Happy coding!** 🤖
-

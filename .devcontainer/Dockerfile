@@ -37,8 +37,9 @@ RUN apt-get update && apt-get install -y clangd-14 && \
 RUN mkdir -p /root/workspace/src
 RUN mkdir -p /root/data/
 
-# Copy vscode folder into the workspace
-COPY .vscode /root/workspace/src/.vscode
+# Copy editor configs into the workspace root so they are available in-container
+COPY .vscode /root/workspace/.vscode
+COPY .clangd .clang-format ruff.toml /root/workspace/
 
 # Default working directory inside the container
 WORKDIR /root/workspace

@@ -22,6 +22,19 @@ services:
         target: /root/workspace
         read_only: false
       - type: bind
+        source: ./.vscode
+        target: /root/workspace/.vscode
+        read_only: false
+      - type: bind
+        source: ./.clangd
+        target: /root/workspace/.clangd
+      - type: bind
+        source: ./.clang-format
+        target: /root/workspace/.clang-format
+      - type: bind
+        source: ./ruff.toml
+        target: /root/workspace/ruff.toml
+      - type: bind
         source: ./data
         target: /root/data
       - type: bind
