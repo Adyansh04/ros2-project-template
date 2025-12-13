@@ -5,9 +5,11 @@
             "name": "ROS: Launch",
             "type": "ros",
             "request": "launch",
-            "target": "${workspaceFolder}/src/my_package/launch/my_launch.py",
+            "target": "${workspaceFolder}/olive_sim/launch/simulation.launch.py",
             "launch": [
-                "rviz2"
+                "rviz2",
+                "gzserver",
+                "gzclient"
             ],
             "preLaunchTask": "colcon build (R)"
         },

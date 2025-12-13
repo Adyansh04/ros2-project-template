@@ -1,11 +1,11 @@
 {
     "python.autoComplete.extraPaths": [
         "/opt/ros/humble/lib/python3.10/site-packages/",
-        "/root/ros2_ws/install/lib/python3.10/site-packages/"
+        "${workspaceFolder}/../install/lib/python3.10/site-packages/"
     ],
     "python.analysis.extraPaths": [
         "/opt/ros/humble/lib/python3.10/site-packages/",
-        "/root/ros2_ws/install/lib/python3.10/site-packages/"
+        "${workspaceFolder}/../install/lib/python3.10/site-packages/"
     ],
     "cmake.configureOnOpen": true,
     "files.associations": {
@@ -21,11 +21,11 @@
     // --- Clangd Configuration ---
     "C_Cpp.intelliSenseEngine": "disabled",
     "clangd.arguments": [
-        "--compile-commands-dir=${workspaceFolder}/build",
+        "--compile-commands-dir=${workspaceFolder}/../build",
         "--clang-tidy",
         "--fallback-style=file"
     ],
     "[cpp]": {
-        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+        "editor.defaultFormatter": "xaver.clang-format"
     }
 }

@@ -6,15 +6,11 @@
             "cStandard": "c17",
             "cppStandard": "c++20",
             "intelliSenseMode": "linux-gcc-x64",
-            "compileCommands": "${workspaceFolder}/build/compile_commands.json",
+            "compileCommands": "${workspaceFolder}/../build/compile_commands.json",
             "includePath": [
                 "${workspaceFolder}/**",
-                // includes from any workspace install folders (supports multiple workspaces under ../workspaces)
-                "${workspaceFolder}/../workspaces/**/install/include",
-                // common header layout inside packages
-                "${workspaceFolder}/../workspaces/**/src/**/include",
-                // ROS distro installed headers (reads ROS_DISTRO from environment)
-                "/opt/ros/${env:ROS_DISTRO}/include",
+                "${workspaceFolder}/../install/include/**",
+                "/opt/ros/${env:ROS_DISTRO}/include/**",
                 "/usr/include",
                 "/usr/local/include"
             ],
@@ -24,9 +20,8 @@
             "browse": {
                 "path": [
                     "${workspaceFolder}/**",
-                    "${workspaceFolder}/../workspaces/**/install/include",
-                    "${workspaceFolder}/../workspaces/**/src/**/include",
-                    "/opt/ros/${env:ROS_DISTRO}/include",
+                    "${workspaceFolder}/../install/include/**",
+                    "/opt/ros/${env:ROS_DISTRO}/include/**",
                     "/usr/include"
                 ],
                 "limitSymbolsToIncludedHeaders": true,

@@ -1,14 +1,14 @@
 ---
-BasedOnStyle:  Google
-ColumnLimit:    120
+BasedOnStyle: Google
+ColumnLimit: 100
 MaxEmptyLinesToKeep: 1
-SortIncludes: false
+SortIncludes: true
 
-Standard:        Auto
-IndentWidth:     2
-TabWidth:        2
-UseTab:          Never
-AccessModifierOffset: -2
+Standard: Auto
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+AccessModifierOffset: -4
 ConstructorInitializerIndentWidth: 2
 NamespaceIndentation: None
 ContinuationIndentWidth: 4
@@ -17,16 +17,22 @@ IndentFunctionDeclarationAfterType: false
 
 AlignEscapedNewlinesLeft: false
 AlignTrailingComments: true
+AlignConsecutiveDeclarations: true
+AlignConsecutiveAssignments: true # =
 
 AllowAllParametersOfDeclarationOnNextLine: false
 ExperimentalAutoDetectBinPacking: false
 ObjCSpaceBeforeProtocolList: true
 Cpp11BracedListStyle: false
 
+PackConstructorInitializers: BinPack
+AllowAllArgumentsOnNextLine: false
+AlignAfterOpenBracket: AlwaysBreak
+
 AllowShortBlocksOnASingleLine: true
 AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
-AllowShortFunctionsOnASingleLine: None
+AllowShortFunctionsOnASingleLine: All
 AllowShortCaseLabelsOnASingleLine: false
 
 AlwaysBreakTemplateDeclarations: true
@@ -36,7 +42,7 @@ BreakBeforeTernaryOperators: false
 BreakConstructorInitializersBeforeComma: true
 
 BinPackParameters: true
-ConstructorInitializerAllOnOneLineOrOnePerLine: true
+BinPackArguments: false
 DerivePointerBinding: false
 PointerBindsToType: true
 
@@ -49,7 +55,7 @@ PenaltyReturnTypeOnItsOwnLine: 50
 
 SpacesBeforeTrailingComments: 2
 SpacesInParentheses: false
-SpacesInAngles:  false
+SpacesInAngles: false
 SpaceInEmptyParentheses: false
 SpacesInCStyleCastParentheses: false
 SpaceAfterCStyleCast: false
@@ -61,7 +67,7 @@ BreakBeforeBraces: Custom
 
 # Qualifiers (const, volatile, static, etc)
 QualifierAlignment: Custom
-QualifierOrder: ['static', 'inline', 'constexpr', 'const', 'volatile', 'type']
+QualifierOrder: ["static", "inline", "constexpr", "const", "volatile", "type"]
 
 # Control of individual brace wrapping cases
 BraceWrapping:
@@ -76,4 +82,4 @@ BraceWrapping:
     BeforeCatch: true
     BeforeElse: true
     IndentBraces: false
-...
+    SplitEmptyFunction: false
