@@ -42,7 +42,7 @@ services:
     ipc: host
     pid: host
 
-    # GPU support with Compose (requires NVIDIA Container Toolkit on host)
+    # GPU support with Compose (requires Docker Compose v2.3+ and NVIDIA Container Toolkit on host)
     deploy:
       resources:
         reservations:

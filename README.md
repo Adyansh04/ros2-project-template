@@ -205,7 +205,7 @@ Verify they exist under `workspace/src/` on the host.
 ### GPU not detected
 Verify NVIDIA Container Toolkit is installed:
 ```bash
-docker run --rm --gpus all nvidia/cuda:11.0-base nvidia-smi
+docker run --rm --gpus all nvidia/cuda:12.0-base nvidia-smi
 ```
 
 ### Inspect container mounts

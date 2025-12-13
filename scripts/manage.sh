@@ -23,7 +23,7 @@ function print_usage() {
     echo "  exec      - Attach a bash shell to the running container."
 }
 
-# Ensure .vscode exists inside host workspace so files are visible inside the container.
+# Ensures .vscode exists inside host workspace so files are visible inside the container.
 function ensure_vscode_in_workspace() {
     local repo_root
     repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -38,7 +38,7 @@ function ensure_vscode_in_workspace() {
     if [ -d "${dest}" ]; then
         echo ".vscode already present at ${dest}; skipping."
     else
-        echo "Creating ${repo_root}/workspace/src and copying .vscode -> ${dest}"
+        echo "Copying .vscode configuration to workspace..."
         mkdir -p "${repo_root}/workspace/src"
         cp -r "${src_vscode}" "${dest}"
     fi
