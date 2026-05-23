@@ -5,16 +5,26 @@
 # Usage: ROS_DISTRO=jazzy ./scripts/manage.sh [start|stop|restart|recreate|logs|exec]
 #
 
-set -e
+set -euo pipefail
 
-# --- Configuration (parameterized by ROS_DISTRO; defaults to 'jazzy') ---
-ROS_DISTRO="${ROS_DISTRO:-jazzy}"
-export ROS_DISTRO
-CONTAINER_NAME="ros_dev_${ROS_DISTRO}"
+# --- Configuration ---
+SERVICE_NAME="ros-dev"
+ENV_FILE="$(cd "$(dirname "$0")/.." && pwd)/.env"
+
+# Load .env first so it wins over any inherited shell values.
+if [[ -f "$ENV_FILE" ]]; then
+    set -a
+    # shellcheck disable=SC1090
+    source "$ENV_FILE"
+    set +a
+else
+    echo "Warning: no .env file found at $ENV_FILE; falling back to shell environment and Compose defaults." >&2
+fi
 
 # --- Helper Functions ---
 function print_usage() {
     echo "Usage: ROS_DISTRO=<humble|jazzy|...> $0 [start|stop|restart|recreate|logs|exec]"
+    echo "Note: .env is loaded first when present; otherwise shell environment and Compose defaults are used."
     echo "  start     - Build and start the container in detached mode."
     echo "  stop      - Stop the running container."
     echo "  restart   - Restart the container."
@@ -23,39 +33,20 @@ function print_usage() {
     echo "  exec      - Attach a bash shell to the running container."
 }
 
-# Ensures .vscode exists inside host workspace so files are visible inside the container.
-function ensure_vscode_in_workspace() {
-    local repo_root
-    repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-    local src_vscode="${repo_root}/.vscode"
-
-    if [ ! -d "${src_vscode}" ]; then
-        echo "No .vscode folder in repo root (${src_vscode}); skipping copy."
-        return 0
-    fi
-
-    local dest="${repo_root}/workspace/src/.vscode"
-    if [ -d "${dest}" ]; then
-        echo ".vscode already present at ${dest}; skipping."
-    else
-        echo "Copying .vscode configuration to workspace..."
-        mkdir -p "${repo_root}/workspace/src"
-        cp -r "${src_vscode}" "${dest}"
-    fi
-}
-
 # --- Main Logic ---
 ACTION=${1:-"help"}
 
 case "$ACTION" in
     start)
-    echo "Starting ROS development container for ROS_DISTRO='${ROS_DISTRO}'..."
-    echo "Preparing workspace and copying default .vscode if missing..."
-    ensure_vscode_in_workspace
+    echo "Starting ROS development container for ROS_DISTRO='${ROS_DISTRO:-<from defaults>}'..."
     echo "Granting GUI access (X11)..."
     xhost +local:docker 2>/dev/null || true
-    docker compose up -d --build
-    echo "Container '${CONTAINER_NAME}' started. Use './scripts/manage.sh exec' to open a shell."
+    docker compose up -d --build "${SERVICE_NAME}"
+    echo
+    echo "Active services:"
+    docker compose ps
+    echo
+    echo "Service '${SERVICE_NAME}' started. Use './scripts/manage.sh exec' to open a shell."
         ;;
     stop)
         echo "Stopping container..."
@@ -68,11 +59,15 @@ case "$ACTION" in
         echo "Restarted."
         ;;
     recreate)
-    echo "Recreating container (code and data on host are preserved: ./workspace, ./data)..."
-    echo "Preparing workspace and copying default .vscode if missing..."
-    ensure_vscode_in_workspace
+    echo "Recreating container for ROS_DISTRO='${ROS_DISTRO:-<from defaults>}'..."
+    echo "Code and data on host are preserved: ./workspace, ./data"
+    echo "Granting GUI access (X11)..."
+    xhost +local:docker 2>/dev/null || true
     docker compose down
-    docker compose up -d --build
+    docker compose up -d --build "${SERVICE_NAME}"
+    echo
+    echo "Active services:"
+    docker compose ps
     echo "Recreated."
         ;;
     logs)
@@ -80,8 +75,8 @@ case "$ACTION" in
         docker compose logs -f
         ;;
     exec)
-        echo "Attaching bash to '${CONTAINER_NAME}'..."
-        docker exec -it "${CONTAINER_NAME}" bash
+        echo "Attaching bash to Compose service '${SERVICE_NAME}'..."
+        docker compose exec "${SERVICE_NAME}" bash
         ;;
     *)
         print_usage
