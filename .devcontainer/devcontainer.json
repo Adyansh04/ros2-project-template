@@ -17,6 +17,7 @@
 			"extensions": [
 				// C/C++ Language Support (Clangd)
 				"llvm-vs-code-extensions.vscode-clangd",
+				"xaver.clang-format",
 				// Python Language Support (Ruff)
 				"ms-python.python",
 				"charliermarsh.ruff",
@@ -26,7 +27,6 @@
 				"AlessandroSofia.ros2-topic-viewer",
 				"KodoRobotics.launchmap",
 				// AI Code Assistance
-				"GitHub.copilot",
 				"GitHub.copilot-chat",
 				// Other useful tools
 				"twxs.cmake",

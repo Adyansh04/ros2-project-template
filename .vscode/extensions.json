@@ -2,6 +2,7 @@
   "recommendations": [
     // C/C++ Language Support (Clangd)
     "llvm-vs-code-extensions.vscode-clangd",
+    "xaver.clang-format",
     // Python Language Support (Ruff)
     "ms-python.python",
     "charliermarsh.ruff",

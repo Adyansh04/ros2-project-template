@@ -21,14 +21,32 @@ This template is a Compose-first ROS 2 development environment with VS Code Dev 
 - (Optional for GPU) NVIDIA Container Toolkit
 - VS Code with Dev Containers extension
 
+## Single-Point Runtime Config (`.env`)
+
+Copy once, then edit only `.env` for distro/image/container naming knobs:
+
+```bash
+cp .env.example .env
+```
+
+Main variables:
+
+- `ROS_DISTRO` (for example: `jazzy`, `humble`)
+- `BASE_IMAGE_REPO`
+- `BASE_IMAGE_TAG_SUFFIX`
+- `DEV_IMAGE_REPO`
+- `CONTAINER_PREFIX`
+- `COMPOSE_PROJECT_NAME`
+
 ## Daily Workflow (Recommended)
 
 ### 1) Start the environment
 
 ```bash
-cp .env.example .env   # Optional; set ROS_DISTRO if needed
 ./scripts/manage.sh start
 ```
+
+After startup, the script prints `docker compose ps` so the resolved container name is immediately visible.
 
 ### 2) Open in VS Code container
 
@@ -38,7 +56,7 @@ cp .env.example .env   # Optional; set ROS_DISTRO if needed
 
 This is the primary flow for consistent extensions and settings.
 
-Fallback: if the service is already running and you prefer attach mode, use `Dev Containers: Attach to Running Container...` and select `ros_dev_<distro>`.
+Fallback: if the service is already running and you prefer attach mode, use `Dev Containers: Attach to Running Container...` and select the container shown by `docker compose ps`.
 
 ### 3) Use multiple ROS terminals
 
@@ -75,8 +93,8 @@ colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo -D
 
 ### Base vs Derived Image
 
-- Base image (upstream): `adyansh04/ros-dev:${ROS_DISTRO}`
-- Derived dev image (this repo build): `adyansh04/ros-dev-workspace:${ROS_DISTRO}`
+- Base image (upstream): `${BASE_IMAGE_REPO}:${ROS_DISTRO}${BASE_IMAGE_TAG_SUFFIX}`
+- Derived dev image (this repo build): `${DEV_IMAGE_REPO}:${ROS_DISTRO}`
 
 The derived image is built using `.devcontainer/Dockerfile` and is where you add project-specific dependencies.
 
@@ -110,13 +128,17 @@ The derived image is built using `.devcontainer/Dockerfile` and is where you add
 
 - `clangd` is the primary language server.
 - `C_Cpp.intelliSenseEngine` is disabled to avoid dual-diagnostics conflicts.
-- C/C++ formatting uses clangd + `.clang-format`.
+- C/C++ formatting uses the `xaver.clang-format` VS Code extension + `.clang-format`.
+- Format-on-save is intentionally disabled.
+- Manual formatting: `Format Document` (`Ctrl+Shift+I` on Linux).
 - Build task exports `compile_commands.json` for accurate indexing.
 
 ### Python
 
 - Ruff is the default formatter.
-- Ruff fix/import actions are configured for on-save workflows.
+- Format-on-save is intentionally disabled.
+- Manual formatting: `Format Document` (`Ctrl+Shift+I` on Linux).
+- Ruff fix/import actions are available manually from code actions / command palette.
 - `ruff.toml` uses `src`-based detection for first-party import resolution:
   - `src = ["workspace/src", "src"]`
 
@@ -134,6 +156,7 @@ Use `scripts/manage.sh` for lifecycle operations:
 ```
 
 `exec` uses Compose service targeting (`docker compose exec ros-dev bash`), so it stays consistent across ROS distro changes via environment or `.env`.
+`start` and `recreate` also print `docker compose ps` to show the active container name and state.
 
 ## Dockerfile Customization
 

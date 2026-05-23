@@ -3,6 +3,10 @@ workspace/build/
 workspace/install/
 workspace/log/
 
+workspace/.clang-format
+workspace/.clangd
+workspace/ruff.toml
+
 # Keep source directory structure
 !workspace/src/
 !workspace/src/.gitkeep
