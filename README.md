@@ -38,6 +38,32 @@ Main variables:
 - `CONTAINER_PREFIX`
 - `COMPOSE_PROJECT_NAME`
 
+## Source Repositories (`.repos`)
+
+This template keeps real ROS packages in separate repos and assembles them into `workspace/src` using a manifest file.
+
+1) Edit `workspace.repos` with your repo URLs and branches.
+2) Import sources (run on host or inside the container):
+
+```bash
+vcs import workspace/src < workspace.repos
+```
+
+To update to the latest branch tips later:
+
+```bash
+cd workspace/src
+vcs pull
+```
+
+Commits happen inside each repo under `workspace/src`. The template repo only tracks the manifest.
+
+If `vcs` is missing, install once:
+
+```bash
+sudo apt-get install -y python3-vcstool
+```
+
 ## Daily Workflow (Recommended)
 
 ### 1) Start the environment
