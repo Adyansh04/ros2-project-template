@@ -37,8 +37,5 @@ RUN apt-get update && apt-get install -y clangd-14 && \
 RUN mkdir -p /root/workspace/src
 RUN mkdir -p /root/data/
 
-# Copy vscode folder into the workspace
-COPY .vscode /root/workspace/src/.vscode
-
 # Default working directory inside the container
 WORKDIR /root/workspace
