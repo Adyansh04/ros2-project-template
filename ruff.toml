@@ -1,15 +1,14 @@
-# ruff.toml
-# This file configures the Ruff linter and formatter for Python.
-
-# Set the maximum line length.
 line-length = 100
+src = ["workspace/src", "src"]
 
-# Enable the isort import sorter.
+[format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
 [lint.isort]
-known-first-party = ["my_package"] # Add your package names here
+combine-as-imports = true
 
-# Define the rules Ruff should check for.
-# See the Ruff documentation for a full list of rules: [https://docs.astral.sh/ruff/rules/](https://docs.astral.sh/ruff/rules/)
 [lint]
 select = [
     "E",  # pycodestyle errors

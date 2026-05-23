@@ -2,10 +2,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "ROS: Launch",
+            "name": "ROS: Launch (edit target)",
             "type": "ros",
             "request": "launch",
-            "target": "${workspaceFolder}/olive_sim/launch/simulation.launch.py",
+            "target": "${workspaceFolder}/src/<your_package>/launch/<your_launch_file>.launch.py",
             "launch": [
                 "rviz2",
                 "gzserver",

@@ -19,6 +19,8 @@ __pycache__/
 
 # IDE
 .idea/
+workspace/.vscode/
+workspace/src/.vscode/
 
 # Temporary files
 *.swp

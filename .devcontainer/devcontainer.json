@@ -5,8 +5,13 @@
 		"../docker-compose.yml"
 	],
 	"service": "ros-dev",
+	"runServices": [
+		"ros-dev"
+	],
+	"shutdownAction": "none",
 	"workspaceFolder": "/root/workspace",
 	"remoteUser": "root",
+	"overrideCommand": false,
 	"customizations": {
 		"vscode": {
 			"extensions": [
@@ -27,32 +32,9 @@
 				"twxs.cmake",
 				"ms-vscode.cmake-tools",
 				"cheshirekow.cmake-format"
-			],
-			"settings": {
-				// --- General Settings ---
-				"terminal.integrated.defaultProfile.linux": "bash",
-				"python.defaultInterpreterPath": "/usr/bin/python3",
-				"editor.formatOnSave": false,
-
-				// --- Clangd Configuration ---
-				"C_Cpp.intelliSenseEngine": "disabled",
-				"clangd.arguments": [
-					"--compile-commands-dir=${workspaceFolder}/build"
-				],
-				"[cpp]": {
-					"editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
-				},
-
-				// --- Ruff Configuration ---
-				"[python]": {
-					"editor.defaultFormatter": "charliermarsh.ruff",
-					"editor.codeActionsOnSave": {
-						"source.organizeImports": "explicit"
-					}
-				}
-			}
+			]
 		}
 	},
 	// Build once to generate compile_commands.json for clangd. Uses ROS_DISTRO from image env.
-	"postCreateCommand": "source /opt/ros/${ROS_DISTRO:-jazzy}/setup.bash && cd /root/workspace && colcon build --symlink-install --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON || true"
+	"postCreateCommand": "bash -lc 'source /opt/ros/${ROS_DISTRO:-jazzy}/setup.bash && cd /root/workspace && colcon build --symlink-install --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON || true'"
 }

@@ -1,11 +1,12 @@
 services:
   ros-dev:
-    # Image parameterized by ROS_DISTRO (default: jazzy)
-    image: adyansh04/ros-dev:${ROS_DISTRO:-jazzy}
+    # Derived development image (distinct from BASE_IMAGE)
+    image: adyansh04/ros-dev-workspace:${ROS_DISTRO:-jazzy}
     build:
       context: .
       dockerfile: .devcontainer/Dockerfile
       args:
+        # Base image from your pre-built upstream images
         BASE_IMAGE: adyansh04/ros-dev:${ROS_DISTRO:-jazzy}
 
     # Keep the container running and attachable
@@ -48,7 +49,7 @@ services:
         target: /tmp/.X11-unix
         read_only: false
       - type: bind
-        source: ~/.ssh
+        source: ${HOME}/.ssh
         target: /root/.ssh
         read_only: true
 

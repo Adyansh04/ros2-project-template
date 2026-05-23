@@ -1,15 +1,9 @@
 {
-    "python.autoComplete.extraPaths": [
-        "/opt/ros/jazzy/lib/python3.12/site-packages/",
-        "/opt/ros/humble/lib/python3.10/site-packages/",
-        "${workspaceFolder}/install/lib/python3.12/site-packages/",
-        "${workspaceFolder}/install/lib/python3.10/site-packages/"
-    ],
     "python.analysis.extraPaths": [
-        "/opt/ros/jazzy/lib/python3.12/site-packages/",
-        "/opt/ros/humble/lib/python3.10/site-packages/",
-        "${workspaceFolder}/install/lib/python3.12/site-packages/",
-        "${workspaceFolder}/install/lib/python3.10/site-packages/"
+        "/opt/ros/jazzy/lib/python3.12/site-packages",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "${workspaceFolder}/install/lib/python3.12/site-packages",
+        "${workspaceFolder}/install/lib/python3.10/site-packages"
     ],
     "cmake.configureOnOpen": true,
     "files.associations": {
@@ -21,7 +15,7 @@
     "terminal.integrated.defaultProfile.linux": "bash",
     "python.defaultInterpreterPath": "/usr/bin/python3",
     "editor.formatOnSave": false,
-    "editor.rulers": [120],
+    "editor.rulers": [100],
     // --- Clangd Configuration ---
     "C_Cpp.intelliSenseEngine": "disabled",
     "clangd.arguments": [
@@ -30,6 +24,20 @@
         "--fallback-style=file"
     ],
     "[cpp]": {
-        "editor.defaultFormatter": "xaver.clang-format"
+        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd",
+        "editor.formatOnSave": true
+    },
+    "[c]": {
+        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd",
+        "editor.formatOnSave": true
+    },
+    // --- Ruff Configuration ---
+    "[python]": {
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.fixAll.ruff": "explicit",
+            "source.organizeImports.ruff": "explicit"
+        }
     }
 }
